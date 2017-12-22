@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Newtonsoft.Json.Linq;
-using RestSharp;
-using RestSharp.Authenticators;
 
 namespace ibm_tutorial
 {
@@ -17,8 +13,9 @@ namespace ibm_tutorial
 		private static string _username = "f0627e26-ae68-436f-8c7f-e1253f3143ed";
 		private static string _password = "2K6NgruI75dd";
 
-		static void Main(string[] args)
+		static void Main()
 		{
+			// Профиль API
 			Console.Write("Enter username (leave empty to use default): ");
 			var username = Console.ReadLine();
 			if(!String.IsNullOrWhiteSpace(username))
@@ -28,11 +25,13 @@ namespace ibm_tutorial
 				_password = Console.ReadLine();
 			}
 
+			// Языки
 			Console.Write("Enter source language: ");
 			_sourceL = Console.ReadLine();
 			Console.Write("Enter target language: ");
 			_targetL = Console.ReadLine();
 
+			// Подготовка
 			HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 			var byteArray = Encoding.ASCII.GetBytes(_username + ":" + _password);
@@ -40,14 +39,18 @@ namespace ibm_tutorial
 
 			while (true)
 			{
+				// Исходный текст
 				Console.Write("Enter source text: ");
 				string textToTranslate = Console.ReadLine();
 
+				// Отправка запроса
 				var response = client.PostAsJsonAsync(@"https://gateway.watsonplatform.net/language-translator/api/v2/translate", new Input
 				{
 					text = textToTranslate,
 					model_id = $"{_sourceL}-{_targetL}-conversational"
 				}).Result.Content;
+
+				// Обработка ответа
 				JObject tr = JObject.Parse(response.ReadAsStringAsync().Result);
 
 				StringBuilder sb = new StringBuilder();
@@ -58,6 +61,7 @@ namespace ibm_tutorial
 					sb.Append(", ");
 				}
 
+				// Вывод ответаы
 				Console.WriteLine("Translated text: " + sb.ToString(0, sb.Length - 2));
 			}
 		}
