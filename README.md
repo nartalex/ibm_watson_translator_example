@@ -1,6 +1,6 @@
-Language codes:
-de:German
-en:English
-es:Spanish
-fr:French
+Language codes:<br/>
+de:German<br/>
+en:English<br/>
+es:Spanish<br/>
+fr:French<br/>
 it:Italian
